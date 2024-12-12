@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Bogged;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -36,8 +35,7 @@ public class ItemStackStringifier {
 
         // do items now use components instead of NBT (1.20.5+)?
         try {
-            Bogged.class.getName();
-            SUPPORTS_ITEM_COMPONENTS = true;
+            SUPPORTS_ITEM_COMPONENTS = false;
         } catch (Error e) {
         }
     }

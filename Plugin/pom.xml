@@ -29,6 +29,10 @@
         <repository>
             <id>essentialsx-repo</id>
             <url>https://repo.essentialsx.net/releases/</url>
+		</repository>
+		<repository>
+            <id>papermc</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
     </repositories>
 
@@ -63,7 +67,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.20.6-R0.1-SNAPSHOT</version>
+            <version>1.19.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -82,44 +86,48 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.2</version>
-                <configuration>
-                    <createDependencyReducedPom>false</createDependencyReducedPom>
-                    <relocations>
-                        <relocation>
-                            <pattern>com.google.gson</pattern>
-                            <shadedPattern>de.marcely.kitgui.libraries.com.google.gson</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>com.cryptomorin.xseries</pattern>
-                            <shadedPattern>de.marcely.kitgui.libraries.com.cryptomorin.xseries
-                            </shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>org.bstats</pattern>
-                            <shadedPattern>de.marcely.kitgui.libraries.org.bstats
-                            </shadedPattern>
-                        </relocation>
-                    </relocations>
-                    <artifactSet>
-                        <excludes>
-                            <exclude>junit:junit</exclude>
-                            <exclude>org.hamcrest:*</exclude>
-                        </excludes>
-                    </artifactSet>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+        <!-- Shade plugin first -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.5.2</version>
+            <configuration>
+                <createDependencyReducedPom>false</createDependencyReducedPom>
+                ...
+            </configuration>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+
+        <!-- Antrun plugin after shade plugin -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+                <execution>
+                    <id>copy-jar</id>
+                    <phase>package</phase> <!-- remains package -->
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                    <configuration>
+                        <target>
+                            <!-- Use the finalName jar produced by the shade plugin -->
+							<copy file="out/Plugin.jar"
+								tofile="../target/EssentialsKitGUI.jar"
+                                  overwrite="true" />
+                        </target>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
