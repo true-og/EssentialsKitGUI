@@ -10,9 +10,6 @@ import de.marcely.kitgui.util.AdaptedGson;
 import de.marcely.kitgui.util.ItemStackStringifier;
 import de.marcely.kitgui.util.gui.GUIContainer;
 import lombok.Getter;
-import org.bstats.bukkit.Metrics;
-import org.bstats.charts.SimplePie;
-import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -76,20 +73,6 @@ public class KitGUIPlugin extends JavaPlugin {
             getCommand("kitcfg").setTabCompleter(cmd);
         }
 
-        // metrics
-        {
-            final Metrics metrics = new Metrics(this, 17926);
-
-            metrics.addCustomChart(new SimplePie("used_provider", () -> {
-                return this.provider.getName();
-            }));
-            metrics.addCustomChart(new SimplePie("used_provider_version", () -> {
-                return this.provider.getName() + " v" + this.provider.getVersion();
-            }));
-            metrics.addCustomChart(new SingleLineChart("kits_amount", () -> {
-                return this.provider.getKits().size();
-            }));
-        }
     }
 
     @Override
